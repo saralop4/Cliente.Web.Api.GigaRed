@@ -8,8 +8,8 @@ namespace Cliente.Web.Api.Aplicacion.Interfaces
         #region Metodos Asincronos
 
         Task<Response<bool>> RegistrarCliente(ClientePersonaDto ClienteDto);
-        Task<Response<bool>> ActualizarCliente(ActualizarClientePersonaDto ClienteDto);
-        Task<Response<bool>> DeleteCliente(long IdCliente);
+        Task<Response<bool>> ActualizarCliente(long idCliente,ActualizarClientePersonaDto ClienteDto);
+        Task<Response<bool>> EliminarCliente(long IdCliente);
         Task<Response<ClienteDto>> ObtenerCliente(long IdCliente);
         Task<Response<IEnumerable<ClienteDto>>> ObtenerTodosLosClientes();
         Task<ResponsePagination<IEnumerable<ClienteDto>>> ObtenerTodoConPaginación(int NumeroDePagina, int TamañoDePagina);

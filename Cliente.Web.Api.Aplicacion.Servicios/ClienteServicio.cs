@@ -18,28 +18,28 @@ public class ClienteServicio : IClienteServicio
         _ActualizarClientePersonaDtoValidador = ActualizarClientePersonaDtoValidador;
     }
 
-    public async Task<Response<bool>> ActualizarCliente(ActualizarClientePersonaDto ClienteDto)
+    public async Task<Response<bool>> ActualizarCliente(long idCliente, ActualizarClientePersonaDto clienteDto)
     {
         var response = new Response<bool>();
         var validation = _ActualizarClientePersonaDtoValidador.Validate(new ActualizarClientePersonaDto()
         {
-            IdCliente = ClienteDto.IdCliente,
-            UsuarioQueActualizaCliente = ClienteDto.UsuarioQueActualizaCliente,
-            FechaDeActualizadoCliente = ClienteDto.FechaDeActualizadoCliente,
-            HoraDeActualizadoCliente = ClienteDto.HoraDeActualizadoCliente,
-            IpDeActualizadoCliente = ClienteDto.IpDeActualizadoCliente,
-            IdPersona = ClienteDto.IdPersona,
-            IdIndicativo = ClienteDto.IdIndicativo,
-            IdCiudad = ClienteDto.IdCiudad,
-            PrimerNombre = ClienteDto.PrimerNombre,
-            SegundoNombre = ClienteDto.SegundoNombre,
-            PrimerApellido = ClienteDto.PrimerApellido,
-            SegundoApellido = ClienteDto.SegundoApellido,
-            Telefono = ClienteDto.Telefono,
-            UsuarioQueActualizaPersona = ClienteDto.UsuarioQueActualizaPersona,
-            FechaDeActualizadoPersona = ClienteDto.FechaDeActualizadoPersona,
-            HoraDeActualizadoPersona = ClienteDto.HoraDeActualizadoPersona,
-            IpDeActualizadoPersona = ClienteDto.IpDeActualizadoPersona
+            IdCliente = clienteDto.IdCliente,
+            UsuarioQueActualizaCliente = clienteDto.UsuarioQueActualizaCliente,
+            FechaDeActualizadoCliente = clienteDto.FechaDeActualizadoCliente,
+            HoraDeActualizadoCliente = clienteDto.HoraDeActualizadoCliente,
+            IpDeActualizadoCliente = clienteDto.IpDeActualizadoCliente,
+            IdPersona = clienteDto.IdPersona,
+            IdIndicativo = clienteDto.IdIndicativo,
+            IdCiudad = clienteDto.IdCiudad,
+            PrimerNombre = clienteDto.PrimerNombre,
+            SegundoNombre = clienteDto.SegundoNombre,
+            PrimerApellido = clienteDto.PrimerApellido,
+            SegundoApellido = clienteDto.SegundoApellido,
+            Telefono = clienteDto.Telefono,
+            UsuarioQueActualizaPersona = clienteDto.UsuarioQueActualizaPersona,
+            FechaDeActualizadoPersona = clienteDto.FechaDeActualizadoPersona,
+            HoraDeActualizadoPersona = clienteDto.HoraDeActualizadoPersona,
+            IpDeActualizadoPersona = clienteDto.IpDeActualizadoPersona
 
         });
 
@@ -52,7 +52,17 @@ public class ClienteServicio : IClienteServicio
 
         }
 
-        var Cliente = await _ClienteRepositorio.ActualizarClientePersona(ClienteDto);
+        var ClientePersonaExistente = ObtenerCliente(idCliente);
+
+        if (ClientePersonaExistente == null) 
+        {
+            response.IsSuccess = false;
+            response.Message = "El Cliente a actualizar no existe";
+            return response;
+
+        }
+
+        var Cliente = await _ClienteRepositorio.ActualizarClientePersona(clienteDto);
 
         if (Cliente is {}) // no es nulo
         {
@@ -68,13 +78,13 @@ public class ClienteServicio : IClienteServicio
         return response;
     }
 
-    public async Task<Response<bool>> DeleteCliente(long IdCliente)
+    public async Task<Response<bool>> EliminarCliente(long idCliente)
     {
         var response = new Response<bool>();
 
         try
         {
-            response.Data = await _ClienteRepositorio.Eliminar(IdCliente);
+            response.Data = await _ClienteRepositorio.Eliminar(idCliente);
             if (response.Data)
             {
                 response.IsSuccess = true;
@@ -94,17 +104,17 @@ public class ClienteServicio : IClienteServicio
         return response;
     }
 
-    public async Task<Response<ClienteDto>> ObtenerCliente(long IdCliente)
+    public async Task<Response<ClienteDto>> ObtenerCliente(long idCliente)
     {
         var response = new Response<ClienteDto>();
 
         try
         {
-            var Cliente = await _ClienteRepositorio.ObtenerClientePersona(IdCliente);
+            var cliente = await _ClienteRepositorio.ObtenerClientePersona(idCliente);
            
-            if (Cliente != null)
+            if (cliente != null)
             {
-                response.Data = Cliente;    
+                response.Data = cliente;    
                 response.IsSuccess = true;
                 response.Message = "Consulta Exitosa!!";
             }
