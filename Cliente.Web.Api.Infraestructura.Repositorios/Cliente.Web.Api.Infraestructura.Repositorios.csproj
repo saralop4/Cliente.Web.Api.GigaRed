@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cliente.Web.Api.Dominio.DTOs\Cliente.Web.Api.Dominio.DTOs.csproj" />
+    <ProjectReference Include="..\Cliente.Web.Api.Dominio.Interfaces\Cliente.Web.Api.Dominio.Interfaces.csproj" />
+    <ProjectReference Include="..\Cliente.Web.Api.Dominio.Persistencia\Cliente.Web.Api.Dominio.Persistencia.csproj" />
+  </ItemGroup>
+
+</Project>
