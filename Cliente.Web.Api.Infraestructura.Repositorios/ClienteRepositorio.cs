@@ -1,10 +1,9 @@
-﻿using DominioCliente = Cliente.Web.Api.Dominio.Persistencia.Modelos;
+﻿using Cliente.Web.Api.Dominio.DTOs.ClienteDTOs;
 using Cliente.Web.Api.Dominio.Interfaces;
 using Cliente.Web.Api.Dominio.Persistencia;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data;
-using Cliente.Web.Api.Dominio.DTOs.ClienteDTOs;
 
 namespace Cliente.Web.Api.Infraestructura.Repositorios;
 
@@ -58,7 +57,7 @@ public class ClienteRepositorio : IClienteRepositorio
         using (var conexion = _context.CreateConnection())
         {
 
-            var query = "EliminarCliente";
+            var query = "EliminarClienteYPersona";
             var parameters = new DynamicParameters();
             parameters.Add("IdCliente", Id);
             parameters.Add("EstadoEliminado",true);
