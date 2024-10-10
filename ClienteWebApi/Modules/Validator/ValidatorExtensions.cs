@@ -9,7 +9,9 @@ public static class ValidatorExtensions
     public static IServiceCollection AddValidator(this IServiceCollection services)
     {
       //  services.AddTransient<ClienteDtoValidador>(); //crea una instancia por cada peticion
-        services.AddTransient<PersonaDtoValidador>();
+        services.AddTransient<ActualizarClientePersonaDtoValidador>();
+        services.AddTransient<ClientePersonaDtoValidador>();
+
 
         return services;
     }

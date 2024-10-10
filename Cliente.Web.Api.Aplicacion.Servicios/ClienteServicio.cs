@@ -3,7 +3,6 @@ using Cliente.Web.Api.Aplicacion.Validadores;
 using Cliente.Web.Api.Dominio.DTOs.ClienteDTOs;
 using Cliente.Web.Api.Dominio.Interfaces;
 using Cliente.Web.Api.Transversal.Modelos;
-using FluentValidation;
 
 namespace Cliente.Web.Api.Aplicacion.Servicios;
 public class ClienteServicio : IClienteServicio
@@ -21,6 +20,14 @@ public class ClienteServicio : IClienteServicio
     public async Task<Response<bool>> ActualizarCliente(long idCliente, ActualizarClientePersonaDto clienteDto)
     {
         var response = new Response<bool>();
+
+        if (idCliente == 0)
+        {
+            response.IsSuccess = false;
+            response.Message = "Debe proporcionar el id del cliente a actualizar.";
+            return response;
+        }
+
         var validation = _ActualizarClientePersonaDtoValidador.Validate(new ActualizarClientePersonaDto()
         {
             IdCliente = clienteDto.IdCliente,
@@ -57,7 +64,7 @@ public class ClienteServicio : IClienteServicio
         if (ClientePersonaExistente == null) 
         {
             response.IsSuccess = false;
-            response.Message = "El Cliente a actualizar no existe";
+            response.Message = "El cliente a actualizar no existe";
             return response;
 
         }
@@ -82,13 +89,20 @@ public class ClienteServicio : IClienteServicio
     {
         var response = new Response<bool>();
 
+        if (idCliente == 0)
+        {
+            response.IsSuccess = false;
+            response.Message = "Debe proporcionar el id del cliente a eliminar.";
+            return response;
+        }
+
         try
         {
             response.Data = await _ClienteRepositorio.Eliminar(idCliente);
             if (response.Data)
             {
                 response.IsSuccess = true;
-                response.Message = "Elimiacion Exitosa!!";
+                response.Message = "Elimiacion exitosa!!";
             }
             else
             {
@@ -108,6 +122,13 @@ public class ClienteServicio : IClienteServicio
     {
         var response = new Response<ClienteDto>();
 
+        if (idCliente == 0)
+        {
+            response.IsSuccess = false;
+            response.Message = "Debe proporcionar el id del cliente a consultar.";
+            return response;
+        }
+
         try
         {
             var cliente = await _ClienteRepositorio.ObtenerClientePersona(idCliente);
@@ -116,12 +137,12 @@ public class ClienteServicio : IClienteServicio
             {
                 response.Data = cliente;    
                 response.IsSuccess = true;
-                response.Message = "Consulta Exitosa!!";
+                response.Message = "Consulta exitosa!!";
             }
             else
             {
                 response.IsSuccess = false;
-                response.Message = "Hubo error al consultar el registro";
+                response.Message = "El cliente no existe";
             }
         }
         catch (Exception ex)
@@ -147,7 +168,7 @@ public class ClienteServicio : IClienteServicio
              //   response.TotalPaginas = (int)Math.Ceiling(Contar / (double)TamañoDePagina);
              //   response.CantidadTotal = Contar;
                 response.IsSuccess = true;
-                response.Message = "Consulta Paginada Exitosa!!!";
+                response.Message = "Consulta paginada exitosa!!!";
 
             }
         }
@@ -171,7 +192,7 @@ public class ClienteServicio : IClienteServicio
             {
                 Response.Data= Clientes;
                 Response.IsSuccess = true;
-                Response.Message = "Consulta Exitosa!!";
+                Response.Message = "Consulta exitosa!!";
             }
             else
             {
@@ -199,12 +220,12 @@ public class ClienteServicio : IClienteServicio
                 IdIndicativo = ClienteDto.IdIndicativo,
                 IdCiudad = ClienteDto.IdCiudad,
                 PrimerNombre = ClienteDto.PrimerNombre,
+                SegundoNombre = ClienteDto.SegundoNombre,
                 PrimerApellido = ClienteDto.PrimerApellido,
+                SegundoApellido = ClienteDto.SegundoApellido,
                 Telefono = ClienteDto.Telefono,
                 UsuarioQueRegistraPersona = ClienteDto.UsuarioQueRegistraPersona,
-                IpDeRegistroPersona = ClienteDto.IpDeRegistroPersona,
-                UsuarioQueRegistraCliente = ClienteDto.UsuarioQueRegistraCliente,
-                IpDeRegistroCliente = ClienteDto.IpDeRegistroCliente
+                UsuarioQueRegistraCliente = ClienteDto.UsuarioQueRegistraCliente
 
             });
 
@@ -217,7 +238,7 @@ public class ClienteServicio : IClienteServicio
 
             }
 
-            var Cliente = await _ClienteRepositorio.RegistrarClienteYPersona(ClienteDto);
+            var Cliente = await _ClienteRepositorio.RegistrarClientePersona(ClienteDto);
 
             if (Cliente is {}) // no es nulo
             {
