@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cliente.Web.Api.Controllers.V1;
 
-//[Authorize]
+[Authorize]
 [Route("Api/V{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1.0")]

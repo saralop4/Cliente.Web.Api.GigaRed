@@ -13,20 +13,10 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddEndpointsApiExplorer();
-
-        //builder.Services.AddControllers().AddNewtonsoftJson(options =>
-        //{
-        //    options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-        //});
-
-
-
         builder.Services.AddVersioning();
-     //   builder.Services.AddAuthentication(builder.Configuration);
-        //  builder.Services.AddMapper();
-        //   builder.Services.AddFeature(builder.Configuration);
+        builder.Services.AddAuthentication(builder.Configuration);
+        builder.Services.AddAuthorization();
         builder.Services.AddValidator();
-        //  builder.Services.AddHealthCheck(builder.Configuration);
         builder.Services.AddInjection(builder.Configuration);
         builder.Services.AddSwaggerDocumentation();
 
@@ -60,18 +50,11 @@ public class Program
 
 
         app.UseHttpsRedirection();
-      //  app.UseAuthentication();
-
+        app.UseAuthentication();
+        app.UseAuthorization();  
         app.UseCors("policyApi");
-     //   app.UseAuthorization();
         app.MapControllers();
 
-        /*    app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-        */
         app.Run();
     }
 }
