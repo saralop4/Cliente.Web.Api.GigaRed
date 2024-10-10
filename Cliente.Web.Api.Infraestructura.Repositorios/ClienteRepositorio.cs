@@ -56,16 +56,17 @@ public class ClienteRepositorio : IClienteRepositorio
     {
         using (var conexion = _context.CreateConnection())
         {
-
             var query = "EliminarClienteYPersona";
             var parameters = new DynamicParameters();
             parameters.Add("IdCliente", Id);
-            parameters.Add("EstadoEliminado",true);
+            parameters.Add("EstadoEliminado", true);
 
-            var result = await conexion.ExecuteAsync(query, param: parameters, commandType: CommandType.StoredProcedure);
+            var result = await conexion.ExecuteScalarAsync<int>(query, param: parameters, commandType: CommandType.StoredProcedure);
+
             return result > 0;
         }
     }
+
 
     public async Task<ClienteDto> ObtenerClientePersona(long Id)
     {
@@ -111,32 +112,27 @@ public class ClienteRepositorio : IClienteRepositorio
         }
     }
 
-    public async Task<bool> RegistrarClienteYPersona(ClientePersonaDto modelo)
+    public async Task<bool> RegistrarClientePersona(ClientePersonaDto clientePersonaDto)
     {
         using (var conexion = _context.CreateConnection())
         {
-            var query = "RegistrarClienteYPersona"; 
+            var query = "RegistrarClienteYPersona";
+
             var parameters = new DynamicParameters();
+            parameters.Add("IdIndicativo", clientePersonaDto.IdIndicativo);
+            parameters.Add("IdCiudad", clientePersonaDto.IdCiudad);
+            parameters.Add("PrimerNombre", clientePersonaDto.PrimerNombre);
+            parameters.Add("SegundoNombre", clientePersonaDto.SegundoNombre);
+            parameters.Add("PrimerApellido", clientePersonaDto.PrimerApellido);
+            parameters.Add("SegundoApellido", clientePersonaDto.SegundoApellido);
+            parameters.Add("Telefono", clientePersonaDto.Telefono);
+            parameters.Add("NombreFoto", clientePersonaDto.NombreFoto);
+            parameters.Add("UsuarioQueRegistraPersona", clientePersonaDto.UsuarioQueRegistraPersona);
+            parameters.Add("IpDeRegistroPersona", clientePersonaDto.IpDeRegistroPersona);
+            parameters.Add("UsuarioQueRegistraCliente", clientePersonaDto.UsuarioQueRegistraCliente);
+            parameters.Add("IpDeRegistroCliente", clientePersonaDto.IpDeRegistroCliente);
 
-            // Parámetros para la Persona
-            parameters.Add("IdIndicativo", modelo.IdIndicativo);
-            parameters.Add("IdCiudad", modelo.IdCiudad);
-            parameters.Add("PrimerNombre", modelo.PrimerNombre);
-            parameters.Add("SegundoNombre", modelo.SegundoNombre);
-            parameters.Add("PrimerApellido", modelo.PrimerApellido);
-            parameters.Add("SegundoApellido", modelo.SegundoApellido);
-            parameters.Add("Telefono", modelo.Telefono);
-            parameters.Add("Foto", modelo.Foto);
-            parameters.Add("NombreFoto", modelo.NombreFoto);
-            parameters.Add("UsuarioQueRegistraPersona", modelo.UsuarioQueRegistraPersona);
-            parameters.Add("IpDeRegistroPersona", modelo.IpDeRegistroPersona);
-
-            // Parámetros para el Cliente
-            parameters.Add("UsuarioQueRegistraCliente", modelo.UsuarioQueRegistraCliente);
-            parameters.Add("IpDeRegistroCliente", modelo.IpDeRegistroCliente);
-
-            // Ejecutar el procedimiento almacenado
-            var result = await conexion.ExecuteAsync(query, param: parameters, commandType: CommandType.StoredProcedure);
+            var result = await conexion.ExecuteAsync(query, parameters, commandType: CommandType.StoredProcedure);
 
             return result > 0;
         }

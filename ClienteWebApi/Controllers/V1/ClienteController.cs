@@ -20,81 +20,80 @@ public class ClienteController : ControllerBase
 
     #region Metodos Asincronos*
 
-    [HttpPost("Guardar")]
-    public async Task<IActionResult> Guardar([FromBody] ClientePersonaDto clienteDto)
+    [HttpPost("GuardarCliente")]
+    public async Task<IActionResult> GuardarCliente([FromBody] ClientePersonaDto ClienteDto)
     {
-        if (clienteDto == null)
+        var ipDeRegistro = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+        if (ipDeRegistro != null)
         {
-            return BadRequest();
+            ClienteDto.IpDeRegistroPersona = ipDeRegistro.ToString();
+            ClienteDto.IpDeRegistroCliente = ipDeRegistro.ToString();
         }
-        var Response = await _clienteServicio.RegistrarCliente(clienteDto);
+
+        var Response = await _clienteServicio.RegistrarCliente(ClienteDto);
+
+        if (Response.IsSuccess)
+        {
+            return Ok( Response);
+        }
+        return BadRequest(Response);
+
+
+    }
+
+    [HttpPut("ActualizarCliente/{IdCliente}")]
+    public async Task<IActionResult> ActualizarCliente(long IdCliente, [FromBody] ActualizarClientePersonaDto ClienteDto)
+    {
+        var ipDeActualizado = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+        if (ipDeActualizado != null)
+        {
+            ClienteDto.IpDeActualizadoPersona = ipDeActualizado.ToString();
+            ClienteDto.IpDeActualizadoCliente = ipDeActualizado.ToString();
+        }
+
+        var Response = await _clienteServicio.ActualizarCliente(IdCliente,ClienteDto);
 
         if (Response.IsSuccess)
         {
             return Ok(Response);
         }
-        return BadRequest(Response.Message);
-
-
+        return BadRequest(Response);
+        
     }
 
-    [HttpPut("Actualizar/{idCliente}")]
-    public async Task<IActionResult> Actualizar(long idCliente, [FromBody] ActualizarClientePersonaDto clienteDto)
+    [HttpDelete("EliminarCliente/{IdCliente}")]
+    public async Task<IActionResult> EliminarCliente(long IdCliente)
     {
-                
-        if (clienteDto == null)
-        {
-            return BadRequest();
-        }
-        var Response = await _clienteServicio.ActualizarCliente(idCliente,clienteDto);
+
+        var Response = await _clienteServicio.EliminarCliente(IdCliente);
 
         if (Response.IsSuccess)
         {
             return Ok(Response);
         }
-        return BadRequest(Response.Message);
+        return BadRequest(Response);
 
 
     }
 
-    [HttpDelete("Eliminar")]
-    public async Task<IActionResult> Eliminar(long idCliente)
+    [HttpGet("ObtenerClientePorId/{IdCliente}")]
+    public async Task<IActionResult> ObtenerClientePorId(long IdCliente)
     {
-        if (idCliente == 0)
-        {
-            return BadRequest();
-        }
-        var Response = await _clienteServicio.EliminarCliente(idCliente);
+        var Response = await _clienteServicio.ObtenerCliente(IdCliente);
 
         if (Response.IsSuccess)
         {
             return Ok(Response);
         }
-        return BadRequest(Response.Message);
+        return BadRequest(Response);
 
 
     }
 
-    [HttpGet("Obtener")]
-    public async Task<IActionResult> Obtener(long idCliente)
-    {
-        if (idCliente == 0)
-        {
-            return BadRequest();
-        }
-        var Response = await _clienteServicio.ObtenerCliente(idCliente);
-
-        if (Response.IsSuccess)
-        {
-            return Ok(Response);
-        }
-        return BadRequest(Response.Message);
-
-
-    }
-
-    [HttpGet("ObtenerTodo")]
-    public async Task<IActionResult> ObtenerTodo()
+    [HttpGet("ObtenerTodoLosClientes")]
+    public async Task<IActionResult> ObtenerTodoLosClientes()
     {
 
         var Response = await _clienteServicio.ObtenerTodosLosClientes();
@@ -103,23 +102,21 @@ public class ClienteController : ControllerBase
         {
             return Ok(Response);
         }
-        return BadRequest(Response.Message);
-
+        return BadRequest(Response);
 
     }
 
-    [HttpGet("ObtenerTodoConPaginacion")]
-    public async Task<IActionResult> ObtenerTodoConPaginacion([FromQuery] int numeroPagina, int tamañoPagina)
+    [HttpGet("ObtenerTodoClienteConPaginacion/{NumeroPagina}/{amTañoPagina}")]
+    public async Task<IActionResult> ObtenerTodoClienteConPaginacion(int NumeroPagina, int TamañoPagina)
     {
 
-        var Response = await _clienteServicio.ObtenerTodoConPaginación(numeroPagina, tamañoPagina);
+        var Response = await _clienteServicio.ObtenerTodoConPaginación(NumeroPagina, TamañoPagina);
 
         if (Response.IsSuccess)
         {
             return Ok(Response);
         }
-        return BadRequest(Response.Message);
-
+        return BadRequest(Response);
 
     }
 

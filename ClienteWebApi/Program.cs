@@ -22,7 +22,7 @@ public class Program
 
 
         builder.Services.AddVersioning();
-        builder.Services.AddAuthentication(builder.Configuration);
+     //   builder.Services.AddAuthentication(builder.Configuration);
         //  builder.Services.AddMapper();
         //   builder.Services.AddFeature(builder.Configuration);
         builder.Services.AddValidator();
@@ -60,10 +60,10 @@ public class Program
 
 
         app.UseHttpsRedirection();
-        app.UseAuthentication();
+      //  app.UseAuthentication();
 
         app.UseCors("policyApi");
-        app.UseAuthorization();
+     //   app.UseAuthorization();
         app.MapControllers();
 
         /*    app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
