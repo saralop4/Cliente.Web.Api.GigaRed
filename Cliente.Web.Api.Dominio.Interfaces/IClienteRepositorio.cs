@@ -4,6 +4,7 @@ namespace Cliente.Web.Api.Dominio.Interfaces;
 
 public interface IClienteRepositorio 
 {
+    //IGenericRepository<IksDto>
     Task<bool> Eliminar(long Id);
     Task<bool> RegistrarClientePersona(ClientePersonaDto modelo);
     Task<bool> ActualizarClientePersona(ActualizarClientePersonaDto Modelo);
