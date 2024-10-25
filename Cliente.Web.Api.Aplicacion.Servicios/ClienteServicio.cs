@@ -59,28 +59,37 @@ public class ClienteServicio : IClienteServicio
 
         }
 
-        var ClientePersonaExistente = ObtenerCliente(idCliente);
-
-        if (ClientePersonaExistente == null) 
+        try
         {
-            response.IsSuccess = false;
-            response.Message = "El cliente a actualizar no existe";
-            return response;
+            var ClientePersonaExistente = ObtenerCliente(idCliente);
+
+            if (ClientePersonaExistente == null)
+            {
+                response.IsSuccess = false;
+                response.Message = "El cliente a actualizar no existe";
+                return response;
+
+            }
+
+            var Cliente = await _ClienteRepositorio.ActualizarClientePersona(clienteDto);
+
+            if (Cliente is { }) // no es nulo
+            {
+                response.Data = Cliente;
+                response.IsSuccess = true;
+                response.Message = "Actualizacion exitosa!!";
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.Message = "Hubo error al actualizar el registro";
+            }
 
         }
-
-        var Cliente = await _ClienteRepositorio.ActualizarClientePersona(clienteDto);
-
-        if (Cliente is {}) // no es nulo
-        {
-            response.Data = Cliente;
-            response.IsSuccess = true;
-            response.Message = "Actualizacion exitosa!!";
-        }
-        else
+        catch (Exception ex) 
         {
             response.IsSuccess = false;
-            response.Message = "Hubo error al actualizar el registro";
+            response.Message = $"Ocurrio un Error: {ex}";
         }
         return response;
     }
